@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Linq;
+using System.Text.RegularExpressions;
 using TCPwebPackage;
 
 public class Robot
@@ -128,6 +129,31 @@ public class Robot
                 }
             }
         }
+        files = ReplaceDisallowedCharacters(files);
+        return files;
+    }
+
+    //  TODO: OPTIMISE THIS:
+    public static string[] ReplaceDisallowedCharacters(string[] files)
+    {
+        char[] invalidChars = { '\\', '/', ':', '*', '?', '\'', '<', '>', '|', '[', ']', '{', '}', '+', '=', ';', ',', '^', '%', '@' };
+
+        string[] fixedFiles = new string[files.Length];
+
+        for (int i = 0; i < files.Length; i++)
+        {
+            Console.WriteLine($"WRONG WORD: {files[i]}");
+            for (int j = 0; j < invalidChars.Length; j++)
+            {
+                if (files[i].Contains(invalidChars[j]))
+                {
+                    files[i] = files[i].Replace(invalidChars[j], '_');
+                    Console.WriteLine($"Wrong character deleted: {invalidChars[j]}");
+                }
+            }
+            Console.WriteLine($"corrected string: {files[i]}");
+        }
+
         return files;
     }
 }

@@ -28,13 +28,16 @@ namespace TCPwebPackage
 
             Console.WriteLine("Crawl the page? Y | N");
             var botcrawl = Console.ReadLine();
+            botcrawl = botcrawl.ToLower();
 
             if (botcrawl == "y")
             {
                 await robot.Crawl(response);
             }
-
-            //await data.Write(response);
+            else
+            {
+                await data.Write(response);
+            }
         }
     }
 }

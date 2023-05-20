@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Dynamic;
 using System.IO;
+using System.IO.Pipes;
 using System.Net.Security;
 using System.Net.Sockets;
 using System.Security.Cryptography;
@@ -12,6 +13,7 @@ namespace TCPwebPackage
 
         public async Task<string> Get(string domain, string page = "")
         {
+            Stopwatch stopwatch = new Stopwatch();
             using (var client = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp))
             {
                 try
@@ -49,6 +51,12 @@ namespace TCPwebPackage
                         }
 
                         byte[] requestBytes = Encoding.UTF8.GetBytes(request);
+                        byte[] buffer = new byte[2048];
+                        string path = @"E:\tescik\tempfile.txt";
+
+                        stopwatch.Start();
+                        bool isTimeExceeded = false;
+
                         await sslStream.WriteAsync(requestBytes, 0, requestBytes.Length);
 
                         using (var reader = new StreamReader(sslStream))
@@ -124,17 +132,11 @@ namespace TCPwebPackage
 
             for (int i = 0; i < data.Length; i++)
             {
-/*                if (userpath != null && !userpath.EndsWith('\\') && goodNaming != null && goodNaming.Length > 0)
-                {
-                    //userpath = userpath + "\\" + goodNaming[i];
-                }
-                else if(userpath!=null && goodNaming != null && goodNaming.Length > 0)
-                {
-                    //userpath = userpath + goodNaming[i];
-                }*/
 
                 Console.WriteLine($"GOOD NAME {i} {goodNaming[i]}");
+
                 Stream streamTest = new FileStream(userpath + goodNaming[i], FileMode.Create, FileAccess.Write, FileShare.None, 0, FileOptions.None);
+
 
                 StreamWriter streamWriter = new StreamWriter(streamTest, Encoding.UTF8);
                 streamWriter.WriteLine(data[i]);
